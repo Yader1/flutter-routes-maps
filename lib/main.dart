@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const LoadingScreen()
+      home: const GpsAccessScreen()
     );
   }
 }
