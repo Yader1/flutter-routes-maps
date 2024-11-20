@@ -15,6 +15,7 @@ dependencies:
   permission_handler: ^11.3.1
   flutter_bloc: ^8.1.6
   bloc: ^8.1.4
+  equatable: ^2.0.5
   google_maps_flutter: ^2.9.0
   dio: ^5.7.0
   animate_do: ^3.3.4
