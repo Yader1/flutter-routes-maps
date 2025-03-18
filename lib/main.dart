@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '/screens/screens.dart';
 import 'blocs/blocs.dart';
-
 void main() {
   runApp(MultiBlocProvider(
     providers: [
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const GpsAccessScreen()
+      home: const LoadingScreen()
     );
   }
 }

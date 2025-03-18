@@ -27,6 +27,7 @@ class _AccessButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
           'Es necesario el acceso a GPS',
