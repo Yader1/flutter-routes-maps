@@ -12,6 +12,9 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   StreamSubscription? positionStream;
 
   LocationBloc() : super(const LocationState()) {
+    on<OnStarFollowingUser>((event, emit) => emit(state.copyWith(followingUser: true)));
+    on<OnStopFollowingUser>((event, emit) => emit(state.copyWith(followingUser: false)));
+
     on<OnNewUserLocationEvent>((event, emit) {
       emit(
         state.copyWith(
@@ -28,6 +31,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   }
 
   void startFollowingUser(){
+    add(OnStarFollowingUser());
     positionStream = Geolocator.getPositionStream().listen((event){
       final position = event;
       add(OnNewUserLocationEvent(LatLng(position.latitude, position.longitude)));
@@ -36,6 +40,7 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
 
   void stopFollowingUser(){
     positionStream?.cancel();
+    add(OnStopFollowingUser());
   }
 
   @override

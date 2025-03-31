@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_routes_maps/blocs/blocs.dart';
+
+import '../blocs/blocs.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -29,7 +30,15 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center()
+      body: BlocBuilder<LocationBloc, LocationState>(
+        builder: (context, state) {
+          if(state.lastKnownLocation == null) return const Center(child: Text('Espere un momento...'));
+
+          return Center(
+            child: Text("${state.lastKnownLocation!.latitude} : ${state.lastKnownLocation!.longitude}")
+          );
+        },
+      )
     );
   }
 }
