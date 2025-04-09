@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_routes_maps/views/views.dart';
 
 import '../blocs/blocs.dart';
 
@@ -34,8 +35,10 @@ class _MapScreenState extends State<MapScreen> {
         builder: (context, state) {
           if(state.lastKnownLocation == null) return const Center(child: Text('Espere un momento...'));
 
-          return Center(
-            child: Text("${state.lastKnownLocation!.latitude} : ${state.lastKnownLocation!.longitude}")
+          return Stack(
+            children: [
+              MapView(initialLocation: state.lastKnownLocation!)
+            ]
           );
         },
       )
