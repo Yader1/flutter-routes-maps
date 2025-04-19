@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_routes_maps/views/views.dart';
+import 'package:flutter_routes_maps/widgets/widgets.dart';
 
 import '../blocs/blocs.dart';
 
@@ -41,7 +42,14 @@ class _MapScreenState extends State<MapScreen> {
             ]
           );
         },
-      )
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: const [
+          BtnCurrentLocation()
+        ],
+      ),
     );
   }
 }
