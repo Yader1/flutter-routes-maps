@@ -44,10 +44,11 @@ class _MapScreenState extends State<MapScreen> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Column(
+      floatingActionButton: const Column(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: const [
-          BtnCurrentLocation()
+        children: [
+          BtnFollowUser(),
+          BtnCurrentLocation(),
         ],
       ),
     );
