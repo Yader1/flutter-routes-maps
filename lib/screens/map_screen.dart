@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_routes_maps/views/views.dart';
-import 'package:flutter_routes_maps/widgets/widgets.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../views/views.dart';
+import '../widgets/widgets.dart';
 import '../blocs/blocs.dart';
 
 class MapScreen extends StatefulWidget {
@@ -38,11 +39,15 @@ class _MapScreenState extends State<MapScreen> {
 
           return BlocBuilder<MapBloc, MapState>(
             builder: (_, mapState) {
+              Map<String, Polyline> polylines = Map.from( mapState.polylines );
+              if(!mapState.showMyRoute){
+                polylines.removeWhere((key, value) => key == 'myRoute');
+              }
               return Stack(
                 children: [
                   MapView(
                     initialLocation: locationState.lastKnownLocation!, 
-                    polylines: mapState.polylines.values.toSet()
+                    polylines: polylines.values.toSet()
                   )
                 ]
               );
@@ -54,6 +59,7 @@ class _MapScreenState extends State<MapScreen> {
       floatingActionButton: const Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          BtnToggleUserRoute(),
           BtnFollowUser(),
           BtnCurrentLocation(),
         ],
