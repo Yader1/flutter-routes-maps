@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../delegates/delegates.dart';
+
 class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({super.key});
 
@@ -12,7 +14,7 @@ class SearchBarWidget extends StatelessWidget {
         width: double.infinity,
         child: GestureDetector(
           onTap: (){
-
+            showSearch(context: context, delegate: SearchDestinationDelegate());
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
@@ -27,7 +29,7 @@ class SearchBarWidget extends StatelessWidget {
                 )
               ]
             ),
-            child: const Text("Donde quieres ir?", style: TextStyle(color: Colors.black87)),
+            child: const Text("¿A dónde quieres ir?", style: TextStyle(color: Colors.black87)),
           ),
         ),
       ),
