@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 
-class SearchDestinationDelegate extends SearchDelegate {
+import '../models/models.dart';
+class SearchDestinationDelegate extends SearchDelegate<SearchResult> {
   SearchDestinationDelegate():super(
     searchFieldLabel: 'Buscar...'
   );
@@ -22,7 +22,8 @@ class SearchDestinationDelegate extends SearchDelegate {
   Widget? buildLeading(BuildContext context) {
     return IconButton(
       onPressed: (){
-        close(context, null);
+        var result = SearchResult(cancel: true);
+        close(context, result);
       }, 
       icon: const Icon(Icons.arrow_back_ios)
     );
@@ -46,7 +47,8 @@ class SearchDestinationDelegate extends SearchDelegate {
             )
           ),
           onTap: (){
-            close(context, null);
+            var result = SearchResult(cancel: false, manual: true);
+            close(context, result);
           },
         )
       ],
