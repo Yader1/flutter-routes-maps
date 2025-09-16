@@ -1,8 +1,8 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/search/search_bloc.dart';
+import '../blocs/blocs.dart';
 
 class ManualMarker extends StatelessWidget {
   const ManualMarker({super.key});
@@ -25,6 +25,10 @@ class _ManualMarkerBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final searchBloc = BlocProvider.of<SearchBloc>(context);
+    final locationBloc = BlocProvider.of<LocationBloc>(context);
+    final mapBloc = BlocProvider.of<MapBloc>(context);
+
 
     return SizedBox(
       width: size.width,
@@ -57,8 +61,14 @@ class _ManualMarkerBody extends StatelessWidget {
                 height: 50,
                 shape: const StadiumBorder(),
                 child: const Text('Confirmar destino', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300)),
-                onPressed: (){
-              
+                onPressed: () async {
+                  final start = locationBloc.state.lastKnownLocation;
+                  if(start == null) return;
+
+                  final end = mapBloc.mapCenter;
+                  if(end == null) return;
+
+                  await searchBloc.getCoorsStartToEnd(start, end);
                 },
               ),
             ),
