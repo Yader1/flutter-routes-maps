@@ -3,6 +3,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/blocs.dart';
+import '../helpers/helpers.dart';
 
 class ManualMarker extends StatelessWidget {
   const ManualMarker({super.key});
@@ -28,7 +29,6 @@ class _ManualMarkerBody extends StatelessWidget {
     final searchBloc = BlocProvider.of<SearchBloc>(context);
     final locationBloc = BlocProvider.of<LocationBloc>(context);
     final mapBloc = BlocProvider.of<MapBloc>(context);
-
 
     return SizedBox(
       width: size.width,
@@ -68,8 +68,15 @@ class _ManualMarkerBody extends StatelessWidget {
                   final end = mapBloc.mapCenter;
                   if(end == null) return;
 
+                  showLoadingMessage(context);
+
                   var destination = await searchBloc.getCoorsStartToEnd(start, end);
-                  mapBloc.drawRoutePolyline(destination);
+                  await mapBloc.drawRoutePolyline(destination);
+
+                  searchBloc.add(
+                    OnDeactivateManualMarkerEvent()
+                  );
+                  Navigator.pop(context);
                 },
               ),
             ),

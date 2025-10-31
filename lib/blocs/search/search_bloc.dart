@@ -16,8 +16,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     required this.trafficService
   }) : super(const SearchState()) {
     on<OnActivateManualMarkerEvent>((event, emit) => emit(state.copyWith(displayManualMarker: true)));
-
-    on<OnActivateManualMarkerEvent>((event, emit) => emit(state.copyWith(displayManualMarker: false)));
+    on<OnDeactivateManualMarkerEvent>((event, emit) => emit(state.copyWith(displayManualMarker: false)));
   }
 
   Future<RouteDestination> getCoorsStartToEnd(LatLng start, LatLng end) async {
