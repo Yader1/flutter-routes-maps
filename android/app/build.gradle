@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.flutter_routes_maps"
-    compileSdk = 34
+    compileSdkVersion("android-36.1")
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -21,8 +21,8 @@ android {
     defaultConfig {
         applicationId = "com.example.flutter_routes_maps"
         multiDexEnabled = true
-        minSdkVersion = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 28
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -32,6 +32,7 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+    buildToolsVersion = "36.1.0"
 }
 
 flutter {

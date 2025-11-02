@@ -35,7 +35,8 @@ class _AccessButton extends StatelessWidget {
         ),
         MaterialButton(
           onPressed: (){
-
+            final gpsBloc = BlocProvider.of<GpsBloc>(context);
+            gpsBloc.askGpsAccess();
           },
           color: Colors.black,
           shape: const StadiumBorder(),
