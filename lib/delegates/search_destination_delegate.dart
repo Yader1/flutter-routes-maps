@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/blocs.dart';
 import '../models/models.dart';
+
 class SearchDestinationDelegate extends SearchDelegate<SearchResult> {
   SearchDestinationDelegate():super(
     searchFieldLabel: 'Buscar...'
@@ -31,7 +34,19 @@ class SearchDestinationDelegate extends SearchDelegate<SearchResult> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return const Text("buildResults");
+    final searchBloc = BlocProvider.of<SearchBloc>(context);
+    final proximity = BlocProvider.of<LocationBloc>(context).state.lastKnownLocation!;
+
+    searchBloc.getPlacesByQuery(
+      proximity,
+      query
+    );
+    
+    return BlocBuilder<SearchBloc, SearchState>(
+      builder: (_, state) {
+        return Text('Resultados de la busqueda');
+      }
+    );
   }
 
   @override

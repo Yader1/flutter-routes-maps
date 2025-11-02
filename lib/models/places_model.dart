@@ -38,10 +38,9 @@ class Feature {
   final List<String> placeType;
   final Properties properties;
   final String textEs;
-  final Language? languageEs;
   final String placeNameEs;
   final String text;
-  final Language? language;
+  final String? language;
   final String placeName;
   final List<double> center;
   final Geometry geometry;
@@ -53,7 +52,6 @@ class Feature {
     required this.placeType,
     required this.properties,
     required this.textEs,
-    this.languageEs,
     required this.placeNameEs,
     required this.text,
     this.language,
@@ -73,10 +71,9 @@ class Feature {
     placeType: List<String>.from(json["place_type"].map((x) => x)),
     properties: Properties.fromJson(json["properties"]),
     textEs: json["text_es"],
-    languageEs: languageValues.map[json["language_es"]],
     placeNameEs: json["place_name_es"],
     text: json["text"],
-    language: languageValues.map[json["language"]],
+    language: json["language"],
     placeName: json["place_name"],
     center: List<double>.from(json["center"].map((x) => x?.toDouble())),
     geometry: Geometry.fromJson(json["geometry"]),
@@ -89,10 +86,9 @@ class Feature {
     "place_type": List<dynamic>.from(placeType.map((x) => x)),
     "properties": properties.toJson(),
     "text_es": textEs,
-    "language_es": languageValues.reverse[languageEs],
     "place_name_es": placeNameEs,
     "text": text,
-    "language": languageValues.reverse[language],
+    "language": language,
     "place_name": placeName,
     "center": List<dynamic>.from(center.map((x) => x)),
     "geometry": geometry.toJson(),
@@ -104,9 +100,9 @@ class Context {
   final String id;
   final String mapboxId;
   final String textEs;
-  final Language? languageEs;
+  final String? languageEs;
   final String text;
-  final Language? language;
+  final String? language;
   final String? wikidata;
   final String? shortCode;
 
@@ -129,9 +125,9 @@ class Context {
     id: json["id"],
     mapboxId: json["mapbox_id"],
     textEs: json["text_es"],
-    languageEs: languageValues.map[json["language_es"]]!,
+    languageEs: json["language_es"],
     text: json["text"],
-    language: languageValues.map[json["language"]]!,
+    language: json["language"],
     wikidata: json["wikidata"],
     shortCode: json["short_code"],
   );
@@ -140,23 +136,13 @@ class Context {
     "id": id,
     "mapbox_id": mapboxId,
     "text_es": textEs,
-    "language_es": languageValues.reverse[languageEs],
+    "language_es": languageEs,
     "text": text,
-    "language": languageValues.reverse[language],
+    "language": language,
     "wikidata": wikidata,
     "short_code": shortCode,
   };
 }
-
-enum Language {
-  ES,
-  FR
-}
-
-final languageValues = EnumValues({
-  "es": Language.ES,
-  "fr": Language.FR
-});
 
 class Geometry {
   final String type;
@@ -184,11 +170,11 @@ class Geometry {
 
 class Properties {
   final String mapboxId;
-  final String wikidata;
+  final String? wikidata;
 
   Properties({
     required this.mapboxId,
-    required this.wikidata,
+    this.wikidata,
   });
 
   factory Properties.fromRawJson(String str) => Properties.fromJson(json.decode(str));

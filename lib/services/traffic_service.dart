@@ -26,7 +26,7 @@ class TrafficService {
     return data;
   } 
 
-  Future<List<Feature>> getResultslByQuery(LatLng proximity, String query) async {
+  Future<List<Feature>> getResultsByQuery(LatLng proximity, String query) async {
     if(query.isEmpty) return [];
 
     final url = '$_basePlacesUrl/$query.json';
