@@ -44,7 +44,7 @@ class SearchDestinationDelegate extends SearchDelegate<SearchResult> {
     
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (_, state) {
-        return Text('Resultados de la busqueda');
+        return Text('Resultados: ${state.places.length}');
       }
     );
   }
