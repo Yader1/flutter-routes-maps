@@ -64,6 +64,8 @@ class SearchDestinationDelegate extends SearchDelegate<SearchResult> {
                   name: place.text,
                   description: place.placeName
                 );
+
+                searchBloc.add(AddToHistoryEvent(place));
                 close(context, result);
               }
             );
@@ -76,6 +78,8 @@ class SearchDestinationDelegate extends SearchDelegate<SearchResult> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    final history = BlocProvider.of<SearchBloc>(context).state.history;
+
     return ListView(
       children: [
         ListTile(
@@ -90,9 +94,30 @@ class SearchDestinationDelegate extends SearchDelegate<SearchResult> {
             var result = SearchResult(cancel: false, manual: true);
             close(context, result);
           },
+        ),
+        ...history.map(
+          (place) => ListTile(
+            leading: const Icon(Icons.history, color: Colors.black),
+            title: Text(
+              place.text, 
+              style: const TextStyle(
+                color: Colors.black
+              )
+            ),
+            subtitle: Text(place.placeName),
+            onTap: (){
+              var result = SearchResult(
+                cancel: false, 
+                manual: false, 
+                position: LatLng(place.center[1], place.center[0]),
+                name: place.text,
+                description: place.placeName
+              );
+              close(context, result);
+            },
+          )
         )
       ],
     );
   }
-
 }
