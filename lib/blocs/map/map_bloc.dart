@@ -88,11 +88,17 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       position: routeDestination.points.first
     );
 
+    final endMarker = Marker(
+      markerId: const MarkerId('end'),
+      position: routeDestination.points.last
+    );
+
     final currentPolylines = Map<String, Polyline>.from(state.polylines);
     currentPolylines['route'] = myRoute;
 
     final currentMarker = Map<String, Marker>.from(state.markers);
     currentMarker['start'] = starMarker;
+    currentMarker['end'] = endMarker;
 
     add(DisplayPolylinesEvent(currentPolylines, currentMarker));
   }
