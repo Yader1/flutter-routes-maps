@@ -85,12 +85,20 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
     final starMarker = Marker(
       markerId: const MarkerId('start'),
-      position: routeDestination.points.first
+      position: routeDestination.points.first,
+      infoWindow: InfoWindow(
+        title: 'Inicio',
+        snippet: 'Este es el punto de inicio'
+      ),
     );
 
     final endMarker = Marker(
       markerId: const MarkerId('end'),
-      position: routeDestination.points.last
+      position: routeDestination.points.last,
+      infoWindow: InfoWindow(
+        title: 'Fin',
+        snippet: 'Este es el punto de llegada'
+      ),
     );
 
     final currentPolylines = Map<String, Polyline>.from(state.polylines);
@@ -101,6 +109,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     currentMarker['end'] = endMarker;
 
     add(DisplayPolylinesEvent(currentPolylines, currentMarker));
+
+    await Future.delayed(const Duration(milliseconds: 300));
+    _mapController?.showMarkerInfoWindow(const MarkerId('start'));
   }
 
   void moveCamera(LatLng newLocation) {
