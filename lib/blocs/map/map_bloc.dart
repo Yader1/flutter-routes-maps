@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../blocs/blocs.dart';
+import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../themes/themes.dart';
 
@@ -89,9 +90,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
     double tripDuration = (routeDestination.duration / 60).floorToDouble();
 
+    final startMarker = await getAssetImageMarker();
+
     final starMarker = Marker(
       markerId: const MarkerId('start'),
       position: routeDestination.points.first,
+      icon: startMarker,
       infoWindow: InfoWindow(
         title: 'Inicio',
         snippet: 'Kms: $kms, duración: $tripDuration min'
