@@ -41,6 +41,46 @@ class StartMarkerPainter extends CustomPainter {
 
     const blackBox = Rect.fromLTWH(40, 20, 70, 80);
     canvas.drawRect(blackBox, blackPaint);
+
+    final textSpan = TextSpan(
+      text: '55',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 30,
+        fontWeight: FontWeight.w400
+      )
+    );
+
+    final minutesPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center
+    )..layout(
+      maxWidth: 70,
+      minWidth: 70
+    );
+
+    minutesPainter.paint(canvas, const Offset(40, 35));
+
+    final minutesText = TextSpan(
+      text: 'Min',
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.w300
+      )
+    );
+
+    final minutesMinPainter = TextPainter(
+      text: minutesText,
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center
+    )..layout(
+      maxWidth: 70,
+      minWidth: 70
+    );
+
+    minutesMinPainter.paint(canvas, const Offset(40, 68));
   }
 
   @override
