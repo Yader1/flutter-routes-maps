@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
 class StartMarkerPainter extends CustomPainter {
+  final int minutes;
+  final String destination;
+
+  StartMarkerPainter({
+    required this.minutes,
+    required this.destination
+  });
+
   @override
   void paint(Canvas canvas, Size size) {
     final blackPaint = Paint()
@@ -43,7 +51,7 @@ class StartMarkerPainter extends CustomPainter {
     canvas.drawRect(blackBox, blackPaint);
 
     final textSpan = TextSpan(
-      text: '55',
+      text: '$minutes',
       style: TextStyle(
         color: Colors.white,
         fontSize: 30,
@@ -81,6 +89,31 @@ class StartMarkerPainter extends CustomPainter {
     );
 
     minutesMinPainter.paint(canvas, const Offset(40, 68));
+
+
+    final locationText = TextSpan(
+      text: destination,
+      style: TextStyle(
+        color: Colors.black54,
+        fontSize: 20,
+        fontWeight: FontWeight.w300
+      )
+    );
+
+    final locationPainter = TextPainter(
+      maxLines: 2,
+      ellipsis: '...',
+      text: locationText,
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.left
+    )..layout(
+      maxWidth: size.width - 135,
+      minWidth: size.width - 135
+    );
+
+    final double offsetY = (destination.length > 20) ? 35 : 48;
+
+    locationPainter.paint(canvas, Offset(120, offsetY));
   }
 
   @override
