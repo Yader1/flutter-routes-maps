@@ -5,10 +5,42 @@ class StartMarkerPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final blackPaint = Paint()
       ..color = Colors.black;
+    
+    final whitePaint = Paint()
+      ..color = Colors.white;
 
     const double circleBlackRadius = 20.0;
+    const double circleWhiteRadius = 7.0;
 
-    canvas.drawCircle(Offset(circleBlackRadius, size.height - circleBlackRadius), circleBlackRadius, blackPaint);
+    canvas.drawCircle(
+      Offset(
+        circleBlackRadius, 
+        size.height - circleBlackRadius
+      ), 
+      circleBlackRadius, 
+      blackPaint
+    );
+
+    canvas.drawCircle(
+      Offset(
+        circleBlackRadius, 
+        size.height - circleWhiteRadius
+      ), 
+      circleWhiteRadius, 
+      whitePaint
+    );
+
+    final path = Path();
+    path.moveTo(40, 20);
+    path.lineTo(size.width - 10, 20);
+    path.lineTo(size.width - 10, 100);
+    path.lineTo(40, 100);
+
+    canvas.drawShadow(path, Colors.black, 10, false);
+    canvas.drawPath(path, whitePaint);
+
+    const blackBox = Rect.fromLTWH(40, 20, 70, 80);
+    canvas.drawRect(blackBox, blackPaint);
   }
 
   @override
