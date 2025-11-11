@@ -1,0 +1,143 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../blocs/blocs.dart';
+import '../../helpers/helpers.dart';
+import '../../models/models.dart';
+import '../../themes/themes.dart';
+
+part 'map_event.dart';
+part 'map_state.dart';
+
+class MapBloc extends Bloc<MapEvent, MapState> {
+  final LocationBloc locationBloc;
+  GoogleMapController? _mapController;
+  LatLng? mapCenter;
+
+  StreamSubscription<LocationState>? locationStateSubscription;
+
+  MapBloc({
+    required this.locationBloc
+  }) : super(const MapState()) {
+    on<OnMapInitialzedEvent>( _onInitMap );
+    on<OnStarFollowingUserEvent>( _onStartFollowingUser );
+    on<OnStopFollowingUserEvent>((event, emit) => emit( state.copyWith(isFollowingUser: false) ));
+    on<UpdateUserPolylineEvent>( _onPolylineNewPoint );
+    on<OnToggleUserRoute>((event, emit) => emit( state.copyWith(showMyRoute: !state.showMyRoute) ));
+    on<DisplayPolylinesEvent>((event, emit) => emit( state.copyWith(polylines: event.polyline, markers: event.markers) ));
+
+    locationStateSubscription = locationBloc.stream.listen((locationState){
+      if(locationState.lastKnownLocation != null){
+        add(UpdateUserPolylineEvent(locationState.myLocationHistory));
+      }
+
+      if(!state.isFollowingUser) return;
+      if(locationState.lastKnownLocation == null) return;
+
+      moveCamera(locationState.lastKnownLocation!);
+    });
+  }
+
+  void _onInitMap(OnMapInitialzedEvent event, Emitter<MapState> emit) {
+    _mapController = event.controller;
+    _mapController!.setMapStyle(jsonEncode(uberMapTheme));
+
+    emit(state.copyWith(isMapInitialized: true));
+  }
+
+  void _onStartFollowingUser(OnStarFollowingUserEvent event, Emitter<MapState> emit) {
+    emit( state.copyWith(isFollowingUser: false) );
+
+    if(locationBloc.state.lastKnownLocation == null) return;
+
+    moveCamera(locationBloc.state.lastKnownLocation!);
+  }
+
+  void _onPolylineNewPoint(UpdateUserPolylineEvent event, Emitter<MapState> emit) {
+    final myRoute = Polyline(
+      polylineId: const PolylineId('myRoute'),
+      color: Colors.black,
+      width: 5,
+      startCap: Cap.roundCap,
+      endCap: Cap.roundCap,
+      points: event.userLocations
+    );
+
+    final currentPolylines = Map<String, Polyline>.from(state.polylines);
+    currentPolylines['myRoute'] = myRoute;
+
+    emit( state.copyWith(polylines: currentPolylines) );
+  }
+
+  Future<void> drawRoutePolyline(RouteDestination routeDestination) async {
+    final myRoute = Polyline(
+      polylineId: const PolylineId('route'),
+      color: Colors.black,
+      width: 5,
+      startCap: Cap.roundCap,
+      endCap: Cap.roundCap,
+      points: routeDestination.points
+    );
+
+    double kms = routeDestination.distance / 1000;
+    kms = (kms * 100).floorToDouble();
+    kms /= 100;
+
+    int tripDuration = (routeDestination.duration / 60).floorToDouble().toInt();
+
+    //final starMaker = await getAssetImageMarker();
+    //final endMaker = await getNetworkImageMarker();
+
+    final starMaker = await getStartCustomMarker(tripDuration, 'Mi ubicacion');
+    final endMaker = await getEndCustomMarker(kms.toInt(), routeDestination.endPlace.text);
+
+    final startMarker = Marker(
+      anchor: const Offset(0.1, 1),
+      markerId: const MarkerId('start'),
+      position: routeDestination.points.first,
+      icon: starMaker,
+      /*infoWindow: InfoWindow(
+        title: 'Inicio',
+        snippet: 'Kms: $kms, duración: $tripDuration min'
+      ),*/
+    );
+
+    final endMarker = Marker(
+      markerId: const MarkerId('end'),
+      position: routeDestination.points.last,
+      icon: endMaker,
+      /*infoWindow: InfoWindow(
+        title: routeDestination.endPlace.text,
+        snippet: routeDestination.endPlace.placeName
+      ),*/
+    );
+
+    final currentPolylines = Map<String, Polyline>.from(state.polylines);
+    currentPolylines['route'] = myRoute;
+
+    final currentMarker = Map<String, Marker>.from(state.markers);
+    currentMarker['start'] = startMarker;
+    currentMarker['end'] = endMarker;
+
+    add(DisplayPolylinesEvent(currentPolylines, currentMarker));
+
+    //await Future.delayed(const Duration(milliseconds: 300));
+    //_mapController?.showMarkerInfoWindow(const MarkerId('start'));
+  }
+
+  void moveCamera(LatLng newLocation) {
+    final cameraUpdate = CameraUpdate.newLatLng(newLocation);
+    _mapController?.animateCamera(cameraUpdate);
+  }
+
+  @override
+  Future<void> close() {
+    locationStateSubscription?.cancel();
+    return super.close();
+  }
+}
