@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: TestMarkerScreen()//const LoadingScreen()
+      home: const LoadingScreen()
     );
   }
 }
